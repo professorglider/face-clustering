@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: faces_db
+    ports:
+      - "5433:5433"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  recognition:
+    build:
+#      context: ./flask
+      dockerfile: ./app/Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - photos:/app/photos
+
+  flask:
+    build:
+#      context: ./flask
+      dockerfile: ./web-view/Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+
+volumes:
+  pgdata:
+    name: pgdata
+  photos:
+    name: photos

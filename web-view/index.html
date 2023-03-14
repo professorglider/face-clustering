@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faces</title>
+</head>
+<body>
+<h1>Faces</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Face Embedding</th>
+        <th>Pitch</th>
+        <th>Roll</th>
+        <th>Yaw</th>
+        <th>Date</th>
+        <th>Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for face in faces %}
+    <tr>
+        <td>{{ face[0] }}</td>
+        <td>{{ face[1] }}</td>
+        <td>{{ face[2] }}</td>
+        <td>{{ face[3] }}</td>
+        <td>{{ face[4] }}</td>
+        <td>{{ face[5] }}</td>
+        <td>{{ face[6] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

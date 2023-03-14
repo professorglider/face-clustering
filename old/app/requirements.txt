@@ -1,0 +1,10 @@
+opencv-python
+face_recognition
+dlib
+numpy
+# opencv-contrib-python
+facenet_pytorch
+# torch
+torchvision
+pandas
+imutils
