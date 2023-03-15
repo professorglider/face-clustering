@@ -14,20 +14,6 @@ SIMILARITY_THRESHOLD = 50
 FONT = cv2.FONT_HERSHEY_COMPLEX
 RESIZE_K = 1
 
-origin_path = "/home/viktor/Documents/me.jpg"
-data_path = "/home/viktor/Documents/faces/data"
-photo_path = "/home/viktor/Documents/faces/photos"
-cropped_path = "/home/viktor/Documents/faces/cropped"
-# origin_path = "/home/viktor/me-three.jpg"
-origin = cv2.imread(origin_path)
-
-origin_faces = fr.face_locations(origin)
-if len(origin_faces) != 1:
-    print("Origin should have exactly one face; found = " + str(len(origin_faces)))
-    exit(1)
-
-origin_encoding = fr.face_encodings(origin, origin_faces)[0]
-
 capture = cv2.VideoCapture(0)
 
 detector = Detector(face_min_height=10)
@@ -49,14 +35,16 @@ def print_faces(faces):
 session_id = uuid.uuid4()
 session_start = datetime.now()
 name = input("Enter your name: ")
+is_first = True
+origin_encoding = 0
 
 while capture.isOpened():
     ret, frame = capture.read()
     dt = datetime.now()
     filename = f'{session_id}_{dt}'.format(dt=dt, session_id=session_id)
-    frame_path = f"{photo_path}/{filename}.jpeg"
-    cropped_face_path = f"{cropped_path}/{filename}.jpeg"
-    cv2.imwrite(frame_path, frame)
+    # frame_path = f"{photo_path}/{filename}.jpeg"
+    # cropped_face_path = f"{cropped_path}/{filename}.jpeg"
+    # cv2.imwrite(frame_path, frame)
     image = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), (0, 0), None, 1/RESIZE_K, 1/RESIZE_K)
     # image = origin
 
@@ -66,7 +54,10 @@ while capture.isOpened():
     # image = cv2.blur(image, ksize)
     faces = detector.detect(image, mode="bgr", angle_estimation=True, crop_faces=True)
 
-    print_faces(faces)
+    if is_first:
+        is_first = False
+        origin_faces = fr.face_locations(image)
+        origin_encoding = fr.face_encodings(image, origin_faces)[0]
 
     for face in faces:
         print(face)
@@ -75,12 +66,12 @@ while capture.isOpened():
         datum['session_start'] = session_start
         datum['name'] = name
         datum['session_id'] = session_id
-        datum['frame_path'] = frame_path
+        # datum['frame_path'] = frame_path
         data.append(datum)
 
         x1, y1, x2, y2 = face.bounding_box
-        cv2.imwrite(cropped_face_path, frame[y1:y2, x1:x2])
-        datum['cropped_path'] = cropped_face_path
+        # cv2.imwrite(cropped_face_path, frame[y1:y2, x1:x2])
+        # datum['cropped_path'] = cropped_face_path
 
         face_encoding = fr.face_encodings(image, [[y1, x2, y2, x1]])
         datum['face_encoding'] = face_encoding
@@ -108,8 +99,8 @@ while capture.isOpened():
 
     # if cv2.waitKey(100) & 0xFF == ord('q'):
         filename = f'{session_id}_{session_start}'.format(session_start=session_start, session_id=session_id)
-        path = f"{data_path}/{filename}.csv"
-        pd.DataFrame(data).drop(columns=["image"]).to_csv(path, index=False)
+        # path = f"{data_path}/{filename}.csv"
+        # pd.DataFrame(data).drop(columns=["image"]).to_csv(path, index=False)
         break
 
 
