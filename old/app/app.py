@@ -34,7 +34,8 @@ def print_faces(faces):
 
 session_id = uuid.uuid4()
 session_start = datetime.now()
-name = input("Enter your name: ")
+# name = input("Enter your name: ")
+name = "Viktor"
 is_first = True
 origin_encoding = 0
 
