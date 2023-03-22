@@ -1,0 +1,27 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.video-container {
+  position: relative;
+  display: inline-block;
+}
+
+video {
+  position: absolute;
+  z-index: 1;
+}
+
+canvas {
+  position: absolute;
+  z-index: 2;
+}
+
+.embeddings,
+.expressions {
+  margin-top: 20px;
+  text-align: left;
+  display: inline-block;
+  vertical-align: top;
+}
